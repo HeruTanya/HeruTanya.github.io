@@ -186,13 +186,13 @@
           Aspiring Full-Stack Developer • AI-Assisted Workflows
         </span>
 </div>
-<h1 class="hidden md:block font-display-hero text-display-hero tracking-tight text-on-surface max-w-4xl mb-6">
+<h1 class="hidden md:block font-display-hero text-display-hero tracking-tight text-on-surface max-w-4xl mb-6" data-content="title">
         Learning to build real web apps, <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">one project at a time</span>
 </h1>
-<h1 class="block md:hidden font-display-hero-mobile text-display-hero-mobile tracking-tight text-on-surface max-w-xl mb-6">
+<h1 class="block md:hidden font-display-hero-mobile text-display-hero-mobile tracking-tight text-on-surface max-w-xl mb-6" data-content="title">
         Learning to build real web apps, <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">one project at a time</span>
 </h1>
-<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-10 leading-relaxed">
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-10 leading-relaxed" data-content="description">
         Focusing on hands-on practical web development. Combining core web fundamentals with accelerated modern AI agent pipelines to architect and deploy functional software.
       </p>
 <div class="flex flex-wrap items-center gap-4">
@@ -620,5 +620,42 @@
         window.location.href = mailtoLink;
       }, 500);
     }
+  </script>
+<!-- ==================== DYNAMIC HERO CONTENT (dashboard) ==================== -->
+<script>
+    // Memuat judul dan deskripsi hero dari content.json.
+    // Teks di HTML tetap jadi cadangan jika file gagal dimuat.
+    (function () {
+      fetch('content.json?t=' + Date.now())
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          var title = String(d.title || '').trim();
+          var desc = String(d.description || '').trim();
+
+          if (title) {
+            document.querySelectorAll('[data-content="title"]').forEach(function (el) {
+              el.textContent = '';
+              // Bagian setelah koma terakhir diberi warna gradasi
+              var i = title.lastIndexOf(',');
+              if (i === -1) {
+                el.textContent = title;
+                return;
+              }
+              el.appendChild(document.createTextNode(title.slice(0, i + 1) + ' '));
+              var span = document.createElement('span');
+              span.className = 'text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary';
+              span.textContent = title.slice(i + 1).trim();
+              el.appendChild(span);
+            });
+          }
+
+          if (desc) {
+            document.querySelectorAll('[data-content="description"]').forEach(function (el) {
+              el.textContent = desc;
+            });
+          }
+        })
+        .catch(function () {});
+    })();
   </script>
 </body></html>
